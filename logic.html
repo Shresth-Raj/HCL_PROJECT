@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Lost Management</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+  /* Global Styles */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  h1, h2 {
+    text-align: center;
+    color: #4caf50;
+  }
+  /* Form Styles */
+  form {
+    margin-bottom: 20px;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  input[type="submit"] {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+  }
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  /* Lost Pets List Styles */
+  .lost-pets {
+    list-style: none;
+    padding: 0;
+  }
+  .lost-pets li {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .pet-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .pet-details i {
+    color: #4caf50;
+    margin-right: 5px;
+  }
+  /* Search Bar Styles */
+  .search-bar {
+    margin-bottom: 20px;
+  }
+  .search-bar input[type="text"] {
+    width: calc(100% - 32px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  .search-bar button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+  }
+  .search-bar button:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Pet Lost Management</h1>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search lost pets...">
+    <button onclick="searchLostPets()">Search</button>
+  </div>
+  <form id="lostPetForm">
+    <input type="text" id="petName" placeholder="Pet's Name" required><br>
+    <input type="text" id="petType" placeholder="Pet's Type (e.g., Dog, Cat)" required><br>
+    <textarea id="description" placeholder="Description" required></textarea><br>
+    <input type="submit" value="Report Lost Pet">
+  </form>
+  <h2>Lost Pets</h2>
+  <ul id="lostPetsList" class="lost-pets">
+    <!-- Lost pet listings will be dynamically added here -->
+  </ul>
+</div>
+
+<script>
+  // Array to store lost pets
+  let lostPets = [];
+
+  // Function to display lost pets
+  function displayLostPets() {
+    const lostPetsList = document.getElementById('lostPetsList');
+    lostPetsList.innerHTML = '';
+    lostPets.forEach(pet => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `
+        <div class="pet-details">
+          <div>
+            <i class="fas fa-paw"></i><strong>${pet.name}</strong> (${pet.type})
+          </div>
+          <div>
+            <i class="fas fa-map-marker-alt"></i> Location: Unknown
+          </div>
+        </div>
+        <div>${pet.description}</div>
+      `;
+      lostPetsList.appendChild(listItem);
+    });
+  }
+
+  // Function to handle form submission
+  function reportLostPet(event) {
+    event.preventDefault();
+    const petName = document.getElementById('petName').value.trim();
+    const petType = document.getElementById('petType').value.trim();
+    const description = document.getElementById('description').value.trim();
+    if (petName && petType && description) {
+      const pet = {
+        name: petName,
+        type: petType,
+        description: description
+      };
+      lostPets.push(pet);
+      displayLostPets();
+      // Clear form fields
+      document.getElementById('lostPetForm').reset();
+    } else {
+      alert('Please fill in all fields.');
+    }
+  }
+
+  // Function to handle search
+  function searchLostPets() {
+    const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+    const filteredPets = lostPets.filter(pet => {
+      return pet.name.toLowerCase().includes(searchInput) || pet.type.toLowerCase().includes(searchInput) || pet.description.toLowerCase().includes(searchInput);
+    });
+    const lostPetsList = document.getElementById('lostPetsList');
+    lostPetsList.innerHTML = '';
+    if (filteredPets.length > 0) {
+      filteredPets.forEach(pet => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+          <div class="pet-details">
+            <div>
+              <i class="fas fa-paw"></i><strong>${pet.name}</strong> (${pet.type})
+            </div>
+            <div>
+              <i class="fas fa-map-marker-alt"></i> Location: Unknown
+            </div>
+          </div>
+          <div>${pet.description}</div>
+        `;
+        lostPetsList.appendChild(listItem);
+      });
+    } else {
+      const noResults = document.createElement('li');
+      noResults.textContent = 'No matching pets found.';
+      lostPetsList.appendChild(noResults);
+    }
+  }
+
+  // Event listener for form submission
+  document.getElementById('lostPetForm').addEventListener('submit', reportLostPet);
+</script>
+</body>
+</html>

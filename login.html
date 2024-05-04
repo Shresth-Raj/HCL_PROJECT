@@ -113,17 +113,17 @@
     <form>
       <input type="text" id="loginUsername" placeholder="Username" required><br>
       <input type="password" id="loginPassword" placeholder="Password" required><br>
-      <input type="submit" value="Login" onclick="login()" >
+      <input type="submit" value="Login" onclick="login(event)">
     </form>
     
-    <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Register</a></p>
+    <p>Don't have an account? <a href="reg.html" onclick="showRegisterForm()">Register</a></p>
   </div>
   <div class="auth-form" id="registerForm" style="display: none;">
     <h2>Register</h2>
     <form>
       <input type="text" id="registerUsername" placeholder="Username" required><br>
       <input type="password" id="registerPassword" placeholder="Password" required><br>
-      <input type="submit" value="Register" onclick="register()">
+      <input type="submit" value="Register" onclick="register(event)">
     </form>
     <p>Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
   </div>
@@ -133,23 +133,31 @@
 </div>
 
 <script>
-  function login() {
+  function login(event) {
+    event.preventDefault();
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
-    if (username === 'user' && password === 'password') {
+    // Here you can add your authentication logic
+    if (username && password) {
+      alert(`Logging in with\nUsername: ${username}`);
       // Redirect to index.html upon successful login
       window.location.href = 'logic.html';
     } else {
-      alert('Invalid username or password.');
+      alert('Please enter a username and password.');
     }
   }
   
-  function register() {
+  function register(event) {
+    event.preventDefault();
     const username = document.getElementById('registerUsername').value.trim();
     const password = document.getElementById('registerPassword').value.trim();
-    // Here you can add your registration logic, for simplicity, let's just alert the username and password
-    alert(`Registration successful!\nUsername: ${username}\nPassword: ${password}`);
-    // You can also save the username and password to a database or perform other actions upon successful registration
+    // Here you can add your registration logic
+    if (username && password) {
+      alert(`Registration successful!\nUsername: ${username}\nPassword: ${password}`);
+      // Redirect to login page or perform other actions upon successful registration
+    } else {
+      alert('Please enter a username and password.');
+    }
   }
   
   function showRegisterForm() {
